@@ -95,11 +95,11 @@ std::vector<Point> Aster::findPath(Point start, Point end) {
             int h = heuristic(neighbor, end);
             int f = g + h;
 
-            // オープンリストまたはクローズドリストにある同じノードよりも優れた経路が見つかれば、更新
+            // オープンリストにある同じノードよりも経路が見つかれば更新する
             openList.push({ neighbor, f, g, h });
         }
     }
 
-    // 経路が見つからなかった場合、空の経路を返す
+    // 経路が見つからなかった空の経路を返す
     return {};
 }
