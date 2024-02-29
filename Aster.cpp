@@ -4,9 +4,9 @@
 #include <random>
 #include <queue>
 
-const char WALL_CHAR = ' ';//壁
-const char EMPTY_CHAR = '□';//道
-const char PATH_CHAR = '*';//経路用文字
+const char WALL_CHAR = ' ';   //壁
+const char EMPTY_CHAR = '□'; //道
+const char PATH_CHAR = '*';   //経路用文字
 
 
 //ノード用構造体
@@ -50,7 +50,7 @@ void Aster::generateRandomWalls() {
 std::vector<Point> Aster::findPath(Point start, Point end) {
     // オープンリストとクローズドリスト
     std::priority_queue<Node> openList;
-    std::vector<std::vector<bool>> closedList(rows, std::vector<bool>(cols, false));
+    std::vector<std::vector<Node>> closedList(rows, std::vector<Node>(cols));
 
     // 始点ノードをオープンリストに追加
     openList.push({ start, 0, 0, 0 });
@@ -78,7 +78,7 @@ std::vector<Point> Aster::findPath(Point start, Point end) {
         }
 
         // クローズドリストに追加
-        closedList[current.point.x][current.point.y] = true;
+        closedList[current.point.x][current.point.y] = current;
 
         // 隣接するセルに移動
         for (const auto& dir : directions) {
@@ -87,7 +87,7 @@ std::vector<Point> Aster::findPath(Point start, Point end) {
             if (neighbor.x < 0 || neighbor.x >= rows ||
                 neighbor.y < 0 || neighbor.y >= cols ||
                 map[neighbor.x][neighbor.y] == WALL_CHAR ||
-                closedList[neighbor.x][neighbor.y])
+                closedList[neighbor.x][neighbor.y].point.x != -1)
                 continue;
 
             // 隣接ノードのf、g、h値を計算
@@ -97,7 +97,6 @@ std::vector<Point> Aster::findPath(Point start, Point end) {
 
             // オープンリストまたはクローズドリストにある同じノードよりも優れた経路が見つかれば、更新
             openList.push({ neighbor, f, g, h });
-            closedList[neighbor.x][neighbor.y] = current;
         }
     }
 
